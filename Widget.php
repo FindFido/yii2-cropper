@@ -31,6 +31,7 @@ class Widget extends InputWidget
      */
     public function init()
     {
+        // blah
         parent::init();
         self::registerTranslations();
 
