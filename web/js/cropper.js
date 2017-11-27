@@ -81,8 +81,10 @@
                                 return;
                             }
                             cropper.showError('');
-
-                            cropper.$thumbnail.attr({'src': response['filelink']});
+ 
+                            $('.new-photo-area img').attr({'src': response['filelink']});
+                            cropper.$thumbnail.remove();
+                            //cropper.$thumbnail.attr({'src': response['filelink']});
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
