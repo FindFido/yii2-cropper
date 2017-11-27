@@ -18,7 +18,7 @@ class CropperAsset extends AssetBundle
      * @inheritdoc
      */
     public $css = [
-        'css/croppertest.css'
+        'css/cropper.css'
     ];
 
     /**
