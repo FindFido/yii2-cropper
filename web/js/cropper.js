@@ -93,8 +93,8 @@
                             }
                             cropper.showError('');
                             $('.jcrop-holder > div').addClass('hidden');
-                            $('.new-photo-area img').attr({'class':'cropped-image','src': response['filelink'], 'style':'display: block; visibility: visible; height:100%; border: none; margin: 0px; padding: 0px; position: absolute; top: 0px; left: 0px;'});
-
+                            $('.new-photo-area img').attr({'class':'cropped-image','src': response['filelink']});
+                            $('.new-photo-area img').css({height:'100%',opacity:1});
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
