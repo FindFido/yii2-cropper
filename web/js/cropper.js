@@ -26,7 +26,7 @@
                         cropper.clearOldImg();
                         
                         /* added code */
-                        cropper.$cropper_add.remove();
+                        cropper.$cropper_add.addClass('hidden');
                         cropper.$cropper_crop.removeClass('hidden');
                         /* end added code */
 
@@ -58,7 +58,8 @@
                     var settings = $.extend({
                         button: [
                             cropper.$cropper_add,
-                            cropper.$upload_new_photo
+                            cropper.$upload_new_photo,
+                            cropper.$cropper_label
                         ],
                         //dropzone: cropper.$cropper_label,
                         responseType: 'json',
@@ -80,6 +81,7 @@
                             cropper.setProgress(55);
                             cropper.showError('');
                             cropper.reader.readAsDataURL(this._queue[0].file);
+                            cropper.$cropper_delete.removeClass('hidden');
                             return false;
                         },
                         onComplete: function (filename, response) {
@@ -91,6 +93,7 @@
                             cropper.showError('');
  
                             $('.new-photo-area img').attr({'src': response['filelink']});
+
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
@@ -111,7 +114,7 @@
 
                     cropper.$widget
                         .on('click', '.close', function () {
-                            cropper.deletePhoto();
+                            cropper.clearOldImg();
                         })
                         .on('click', '.crop-photo', function () {
                             var data = cropper.$img.data('Jcrop').tellSelect();
@@ -132,6 +135,7 @@
 
                             cropper.readyForSubmit = true;
                             cropper.uploader.submit();
+
                         });
                 },
                 showError: function (error) {
@@ -144,6 +148,7 @@
                 setProgress: function (value) {
                     if (value) {
                         cropper.$cropper_buttons.find('button').removeClass('hidden');
+                        cropper.$cropper_add.addClass('hidden');
                         cropper.$cropper_label.addClass('hidden');
                         cropper.$progress.removeClass('hidden');
                         cropper.$progress_bar.css({'width': value + '%'});
@@ -154,10 +159,13 @@
                 },
                 deletePhoto: function () {
                     cropper.$photo_field.val('');
-                    $('.new-photo-area img').attr({'src': '/images/global/pets/pet_dog_brown_missing.png'});
                 },
                 clearOldImg: function () {
                     if (cropper.$img) {
+                        cropper.$cropper_add.removeClass('hidden');
+                        cropper.$cropper_crop.addClass('hidden');
+                        cropper.$cropper_delete.addClass('hidden');
+                        cropper.$cropper_label.removeClass('hidden');
                         cropper.$img.data('Jcrop').destroy();
                         cropper.$img.remove();
                         cropper.$img = null;
