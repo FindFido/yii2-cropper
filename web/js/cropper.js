@@ -11,6 +11,8 @@
                 $upload_new_photo: $widget.find('.upload-new-photo'),
                 $new_photo_area: $widget.find('.new-photo-area'),
                 $cropper_label: $widget.find('.cropper-label'),
+                $cropper_add: $widget.find('.add-photo'),
+                $cropper_crop: $widget.find('.crop-photo'),
                 $cropper_buttons: $widget.find('.cropper-buttons'),
                 $width_input: $widget.find('.width-input'),
                 $height_input: $widget.find('.height-input'),
@@ -21,6 +23,11 @@
                     cropper.reader = new FileReader();
                     cropper.reader.onload = function (e) {
                         cropper.clearOldImg();
+                        
+                        /* added code */
+                        cropper.$cropper_add.remove();
+                        cropper.$cropper_crop.removeClass('hidden');
+                        /* end added code */
 
                         cropper.$new_photo_area.append('<img src="' + e.target.result + '">');
                         cropper.$img = cropper.$new_photo_area.find('img');
@@ -49,7 +56,7 @@
 
                     var settings = $.extend({
                         button: [
-                            cropper.$cropper_label,
+                            cropper.$cropper_add,
                             cropper.$upload_new_photo
                         ],
                         dropzone: cropper.$cropper_label,
