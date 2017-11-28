@@ -48,6 +48,7 @@
                                 setSelect: [x1, y1, x2, y2],
                                 boxWidth: cropper.$new_photo_area.width(),
                                 boxHeight: cropper.$new_photo_area.height(),
+                                bgColor:'',
                                 keySupport: false
                             });
                         };
@@ -91,14 +92,16 @@
                                 return;
                             }
                             cropper.showError('');
- 
-                            $('.new-photo-area img').attr({'src': response['filelink']});
+                            $('.jcrop-holder > div').addClass('hidden');
+                            $('.new-photo-area img').attr({'class':'cropped-image','src': response['filelink'], 'style':'display: block; visibility: visible; height:100%; border: none; margin: 0px; padding: 0px; position: absolute; top: 0px; left: 0px;'});
 
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
                                 onCompleteJcrop(filename, response);
                             }
+                            $('.new-photo-area > img').addClass('hidden');
+                            cropper.$cropper_crop.addClass('hidden');
                         },
                         onSizeError: function () {
                             cropper.showError(options['size_error_text']);
@@ -166,6 +169,7 @@
                         cropper.$cropper_crop.addClass('hidden');
                         cropper.$cropper_delete.addClass('hidden');
                         cropper.$cropper_label.removeClass('hidden');
+                        $widget.find('.cropped-image').addClass('hidden');
                         cropper.$img.data('Jcrop').destroy();
                         cropper.$img.remove();
                         cropper.$img = null;

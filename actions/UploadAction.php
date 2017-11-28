@@ -73,7 +73,7 @@ class UploadAction extends Action
                     intval($request->post('h')),
                     [$request->post('x'), $request->post('y')]
                 )->resize(
-                    new Box($width, $height)
+                    new Box(intval($request->post('w')), intval($request->post('h')))
                 );
                 
                 if (!file_exists($this->path) || !is_dir($this->path)) {
@@ -83,7 +83,9 @@ class UploadAction extends Action
                 } else {
                     if ($image->save($this->path . $model->{$this->uploadParam}->name, ['jpeg_quality' => 100, 'png_compression_level' => 1])) {
                         $result = [
-                            'filelink' => $this->url . $model->{$this->uploadParam}->name
+                            'filelink' => $this->url . $model->{$this->uploadParam}->name,
+                            'height' => intval($request->post('h')),
+                            'width' => intval($request->post('w'))
                         ];
                     } else {
                         $result = [
