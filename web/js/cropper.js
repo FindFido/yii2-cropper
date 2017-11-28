@@ -12,6 +12,7 @@
                 $new_photo_area: $widget.find('.new-photo-area'),
                 $cropper_label: $widget.find('.cropper-label'),
                 $cropper_add: $widget.find('.add-photo'),
+                $cropper_delete: $widget.find('.close'),
                 $cropper_crop: $widget.find('.crop-photo'),
                 $cropper_buttons: $widget.find('.cropper-buttons'),
                 $width_input: $widget.find('.width-input'),
@@ -59,7 +60,7 @@
                             cropper.$cropper_add,
                             cropper.$upload_new_photo
                         ],
-                        dropzone: cropper.$cropper_label,
+                        //dropzone: cropper.$cropper_label,
                         responseType: 'json',
                         noParams: true,
                         multipart: true,
@@ -90,8 +91,6 @@
                             cropper.showError('');
  
                             $('.new-photo-area img').attr({'src': response['filelink']});
-                            cropper.$thumbnail.remove();
-                            //cropper.$thumbnail.attr({'src': response['filelink']});
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
@@ -111,7 +110,7 @@
                     cropper.uploader = new ss.SimpleUpload(settings);
 
                     cropper.$widget
-                        .on('click', '.delete-photo', function () {
+                        .on('click', '.close', function () {
                             cropper.deletePhoto();
                         })
                         .on('click', '.crop-photo', function () {
@@ -129,6 +128,7 @@
 
                             cropper.setProgress(1);
                             cropper.uploader.setProgressBar(cropper.$progress_bar);
+                            cropper.$cropper_delete.removeClass('hidden');
 
                             cropper.readyForSubmit = true;
                             cropper.uploader.submit();
@@ -154,7 +154,7 @@
                 },
                 deletePhoto: function () {
                     cropper.$photo_field.val('');
-                    cropper.$thumbnail.attr({'src': cropper.$thumbnail.data('no-photo')});
+                    $('.new-photo-area img').attr({'src': '/images/global/pets/pet_dog_brown_missing.png'});
                 },
                 clearOldImg: function () {
                     if (cropper.$img) {

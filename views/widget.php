@@ -10,6 +10,7 @@ use yii\helpers\Html;
 ?>
 
 <div class="cropper-widget">
+    <div class="close fileinput-remove hidden" onclick="">×</div>
     <?= Html::activeHiddenInput($model, $widget->attribute, ['class' => 'photo-field']); ?>
     <?= Html::hiddenInput('width', $widget->width, ['class' => 'width-input']); ?>
     <?= Html::hiddenInput('height', $widget->height, ['class' => 'height-input']); ?>
