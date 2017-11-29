@@ -18,7 +18,7 @@ class UploadAction extends Action
     public $path;
     public $url;
     public $uploadParam = 'file';
-    public $maxSize = 2097152;
+    public $maxSize = 16777216;
     public $extensions = 'jpeg, jpg, png, gif';
     public $width = 200;
     public $height = 200;
