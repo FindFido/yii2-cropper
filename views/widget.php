@@ -10,12 +10,11 @@ use yii\helpers\Html;
 ?>
 
 <div class="cropper-widget">
-    <div class="close fileinput-remove hidden" onclick="">×</div>
+    <div class="close hidden" onclick="">×</div>
     <?= Html::activeHiddenInput($model, $widget->attribute, ['class' => 'photo-field']); ?>
     <?= Html::hiddenInput('width', $widget->width, ['class' => 'width-input']); ?>
     <?= Html::hiddenInput('height', $widget->height, ['class' => 'height-input']); ?>
 
-    <center>
     <div class="new-photo-area" style="height: <?= $widget->cropAreaHeight; ?>px; width: <?= $widget->cropAreaWidth; ?>px;">
         <div class="cropper-label">
             <span><?= $widget->label;?></span>
@@ -26,6 +25,7 @@ use yii\helpers\Html;
             <span class="sr-only"></span>
         </div>
     </div>
+    <center>
     <div class="cropper-buttons">
         <button class='flyerImageMissing add-photo text-center text-reverse btn-center big-font-btn btn btn-info btn-orange col-md-4 col-md-push-4 col-xs-12'><i class="glyphicon glyphicon-camera"></i> Add Photo *</button>
         <button class='flyerImageMissing crop-photo hidden text-center text-reverse btn-center big-font-btn btn btn-info btn-orange col-md-4 col-md-push-4 col-xs-12'><i class="glyphicon glyphicon-camera"></i> Crop Photo *</button>
