@@ -9,8 +9,10 @@ use yii\helpers\Html;
 
 $this->registerJs(
         '$(document).ready(function() {
-            if ($("#cropperform-upload_image").val() != "") {
+            if ($("#cropperform-upload_image").val() == "") {
                 $(".close").addClass("hidden");
+            } else {
+                $("div.new-photo-area").addClass("hidden");
             }
         });'
 );
@@ -22,6 +24,17 @@ $this->registerJs(
     <?= Html::activeHiddenInput($model, $widget->attribute, ['class' => 'photo-field']); ?>
     <?= Html::hiddenInput('width', $widget->width, ['class' => 'width-input']); ?>
     <?= Html::hiddenInput('height', $widget->height, ['class' => 'height-input']); ?>
+	<?= Html::img(
+		$model->{$widget->attribute} != ''
+			? $model->{$widget->attribute}
+			: $widget->noPhotoImage,
+		[
+			'style' => 'max-height: ' . $widget->thumbnailHeight . 'px; max-width: ' . $widget->thumbnailWidth . 'px',
+			'class' => 'thumbnail',
+			'data-no-photo' => $widget->noPhotoImage
+		]
+	); ?>
+
 
     <div class="new-photo-area" style="height: <?= $widget->cropAreaHeight; ?>px; width: <?= $widget->cropAreaWidth; ?>px;">
         <div class="cropper-label">

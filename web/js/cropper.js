@@ -6,7 +6,7 @@
                 $widget: $widget,
                 $progress: $progress,
                 $progress_bar: $progress.find('.progress-bar'),
-                $thumbnail: $widget.find('.thumbnail'),
+                $thumbnail: $widget.find('img.thumbnail'),
                 $photo_field: $widget.find('.photo-field'),
                 $upload_new_photo: $widget.find('.upload-new-photo'),
                 $new_photo_area: $widget.find('.new-photo-area'),
@@ -161,10 +161,6 @@
                         cropper.$progress_bar.css({'width': 0});
                     }
                 },
-                deletePhoto: function () {
-                    cropper.$photo_field.val('');
-                    cropper.$upload_image.val('');
-                },
                 clearOldImg: function () {
                     if (cropper.$img) {
                         cropper.$cropper_add.removeClass('hidden');
@@ -176,6 +172,8 @@
                         cropper.$img.remove();
                         cropper.$img = null;
                         cropper.$upload_image.val('');
+                        cropper.$thumbnail.addClass('hidden');
+                        cropper.$new_photo_area.removeClass('hidden');
                     }
                 }
             };
