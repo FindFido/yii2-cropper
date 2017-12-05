@@ -172,8 +172,6 @@
                         cropper.$img.remove();
                         cropper.$img = null;
                         cropper.$upload_image.val('');
-                        cropper.$thumbnail.addClass('hidden');
-                        cropper.$new_photo_area.removeClass('hidden');
                     }
                 }
             };

@@ -21,7 +21,7 @@
 }
 
 .new-photo-area .cropper-label {
-    /*background:url(/images/global/pets/pet_dog_brown_missing.png);
-    background-size:300px 300px;*/
+    background:url(/images/global/pets/pet_dog_brown_missing.png);
+    background-size:300px 300px;
 }
 .new-photo-area .cropper-label span { display:none; }
