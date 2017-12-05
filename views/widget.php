@@ -7,10 +7,18 @@
 
 use yii\helpers\Html;
 
+$this->registerJs(
+        '$(document).ready(function() {
+            if ($("#cropperform-upload_image").val() != "") {
+                $(".close").addClass("hidden");
+            }
+        });'
+);
+
 ?>
 
 <div class="cropper-widget">
-    <div class="close hidden" onclick="">×</div>
+    <div class="close" onlcick="">x</div>
     <?= Html::activeHiddenInput($model, $widget->attribute, ['class' => 'photo-field']); ?>
     <?= Html::hiddenInput('width', $widget->width, ['class' => 'width-input']); ?>
     <?= Html::hiddenInput('height', $widget->height, ['class' => 'height-input']); ?>

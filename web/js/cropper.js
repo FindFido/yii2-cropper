@@ -17,6 +17,7 @@
                 $cropper_buttons: $widget.find('.cropper-buttons'),
                 $width_input: $widget.find('.width-input'),
                 $height_input: $widget.find('.height-input'),
+                $upload_image: $widget.find('#cropperform-upload_image'),
                 uploader: null,
                 reader: null,
                 selectedFile: null,
@@ -162,6 +163,7 @@
                 },
                 deletePhoto: function () {
                     cropper.$photo_field.val('');
+                    cropper.$upload_image.val('');
                 },
                 clearOldImg: function () {
                     if (cropper.$img) {
@@ -173,6 +175,7 @@
                         cropper.$img.data('Jcrop').destroy();
                         cropper.$img.remove();
                         cropper.$img = null;
+                        cropper.$upload_image.val('');
                     }
                 }
             };
