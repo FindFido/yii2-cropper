@@ -11,6 +11,7 @@ use yii\web\UploadedFile;
 use budyaga\cropper\Widget;
 use yii\imagine\Image;
 use Imagine\Image\Box;
+use Aws\S3\S3Client;
 use Yii;
 
 class UploadAction extends Action
@@ -22,6 +23,8 @@ class UploadAction extends Action
     public $extensions = 'jpeg, jpg, png, gif';
     public $width = 200;
     public $height = 200;
+
+    public $s3client;
 
     /**
      * @inheritdoc
@@ -39,6 +42,15 @@ class UploadAction extends Action
         } else {
             $this->path = rtrim(Yii::getAlias($this->path), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
+
+        putenv("AWS_ACCESS_KEY_ID=".Yii::$app->params['aws_key']);
+        putenv("AWS_SECRET_ACCESS_KEY=".Yii::$app->params['aws_secret_key']);
+
+        // Instantiate the S3 client with your AWS credentials
+        $this->s3client = S3Client::factory([
+            'version' => 'latest',
+            'region'  => 'us-east-1'
+        ]);
     }
 
     /**
@@ -81,12 +93,32 @@ class UploadAction extends Action
                         'error' => Yii::t('cropper', 'ERROR_NO_SAVE_DIR')]
                     ;
                 } else {
+
                     if ($image->save($this->path . $model->{$this->uploadParam}->name, ['jpeg_quality' => 100, 'png_compression_level' => 1])) {
-                        $result = [
-                            'filelink' => $this->url . $model->{$this->uploadParam}->name,
-                            'height' => intval($request->post('h')),
-                            'width' => intval($request->post('w'))
-                        ];
+
+                        try {
+                            $result = $this->s3client->putObject(array(
+                                'Bucket'     => Yii::$app->params['s3bucket'],
+                                'Key'        => 'crop/'.$model->{$this->uploadParam}->name,
+                                'SourceFile' => $this->path . $model->{$this->uploadParam}->name,
+                                'ACL'        => 'public-read'
+                            ));
+
+                            $result = [
+                                'filelink' => $result['ObjectURL'],
+                                'height' => intval($request->post('h')),
+                                'width' => intval($request->post('w'))
+                            ];
+
+                            unlink($this->path . $model->{$this->uploadParam}->name);
+
+                        } catch (\Exception $e) {
+                            Yii::error($e);
+                            $result = [
+                                'error' => Yii::t('cropper', 'ERROR_CAN_NOT_UPLOAD_FILE')]
+                            ;
+                        }
+
                     } else {
                         $result = [
                             'error' => Yii::t('cropper', 'ERROR_CAN_NOT_UPLOAD_FILE')]
