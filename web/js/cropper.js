@@ -32,6 +32,7 @@
                         /* end added code */
 
                         cropper.$new_photo_area.append('<img src="' + e.target.result + '">');
+                        cropper.$photo_field.val(e.target.result);
                         cropper.$img = cropper.$new_photo_area.find('img');
 
                         var image = new Image();
