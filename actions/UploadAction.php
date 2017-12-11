@@ -72,17 +72,27 @@ class UploadAction extends Action
                 $model->{$this->uploadParam}->name = uniqid() . '.' . $model->{$this->uploadParam}->extension;
                 $request = Yii::$app->request;
 
-                $width = $request->post('width', $this->width);
-                $height = $request->post('height', $this->height);
+                $width = intval($request->post('w'));
+                $height = intval($request->post('h'));
 
-                $image = Image::crop(
-                    $file->tempName . $request->post('filename'),
-                    intval($request->post('w')),
-                    intval($request->post('h')),
-                    [$request->post('x'), $request->post('y')]
-                )->resize(
-                    new Box(intval($request->post('w')), intval($request->post('h')))
-                );
+				// width and height of cropped image cannot be <= 0
+                if ($width <= 0 || $height <= 0) {
+					$result = [
+						'error' => Yii::t('cropper', 'Could not crop, using full image instead')
+					];
+					Yii::$app->response->format = Response::FORMAT_JSON;
+					return $result;
+				}
+
+				$image = Image::crop(
+					$file->tempName . $request->post('filename'),
+					$width,
+					$height,
+					[$request->post('x'), $request->post('y')]
+				)->resize(
+					new Box($width, $height)
+				);
+
                 
                 if (!file_exists($this->path) || !is_dir($this->path)) {
                     $result = [
@@ -102,8 +112,8 @@ class UploadAction extends Action
 
                             $result = [
                                 'filelink' => $result['ObjectURL'],
-                                'height' => intval($request->post('h')),
-                                'width' => intval($request->post('w'))
+                                'height' => $height,
+                                'width' => $width
                             ];
 
                             unlink($this->path . $model->{$this->uploadParam}->name);
