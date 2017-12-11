@@ -55,8 +55,9 @@ class UploadAction extends Action
     public function run()
     {
         if (Yii::$app->request->isPost) {
+			Yii::$app->response->format = Response::FORMAT_JSON;
             $file = UploadedFile::getInstanceByName($this->uploadParam);
-            $model = new DynamicModel(compact($this->uploadParam));
+            $model = new DynamicModel([$this->uploadParam => $file]);
             $model->addRule($this->uploadParam, 'image', [
                 'maxSize' => $this->maxSize,
                 'tooBig' => Yii::t('cropper', 'TOO_BIG_ERROR', ['size' => $this->maxSize / (1024 * 1024)]),
@@ -69,7 +70,13 @@ class UploadAction extends Action
                     'error' => $model->getFirstError($this->uploadParam)
                 ];
             } else {
-                $model->{$this->uploadParam}->name = uniqid() . '.' . $model->{$this->uploadParam}->extension;
+                if (!$model->{$this->uploadParam}) {
+                	$result = [
+                		'error' => Yii::t('cropper', 'Did not receive image, please try adding again')
+					];
+					return $result;
+				}
+            	$model->{$this->uploadParam}->name = uniqid() . '.' . $model->{$this->uploadParam}->extension;
                 $request = Yii::$app->request;
 
                 $width = intval($request->post('w'));
@@ -80,7 +87,6 @@ class UploadAction extends Action
 					$result = [
 						'error' => Yii::t('cropper', 'Could not crop, using full image instead')
 					];
-					Yii::$app->response->format = Response::FORMAT_JSON;
 					return $result;
 				}
 
@@ -99,7 +105,6 @@ class UploadAction extends Action
                         'error' => Yii::t('cropper', 'ERROR_NO_SAVE_DIR')]
                     ;
                 } else {
-
                     if ($image->save($this->path . $model->{$this->uploadParam}->name, ['jpeg_quality' => 100, 'png_compression_level' => 1])) {
 
                         try {
@@ -132,7 +137,6 @@ class UploadAction extends Action
                     }
                 }
             }
-            Yii::$app->response->format = Response::FORMAT_JSON;
 
             return $result;
         } else {
