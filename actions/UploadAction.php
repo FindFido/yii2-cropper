@@ -83,7 +83,11 @@ class UploadAction extends Action
 
 				// get image orientation
 				if ($exif = @exif_read_data($file->tempName)) {
-					$imageOrientation = $exif['Orientation'];
+					if (isset($exif['Orientation'])) {
+						$imageOrientation = $exif['Orientation'];
+					} else {
+						$imageOrientation = null;
+					}
 				}
 
                 $width = intval($request->post('w'));
@@ -113,7 +117,11 @@ class UploadAction extends Action
                 } else {
                     if ($image->save($this->path . $model->{$this->uploadParam}->name, ['jpeg_quality' => 100, 'png_compression_level' => 1])) {
 
-						$record = FidoComponent::checkImageOrientation($this->path . $model->{$this->uploadParam}->name, $imageOrientation);
+						if ($imageOrientation != null) {
+							$record = FidoComponent::checkImageOrientation($this->path . $model->{$this->uploadParam}->name, $imageOrientation);
+						} else {
+							$record = False;
+						}
 						if ($record) {
 							$result = [
 								'filelink' => $record->url,
