@@ -38,6 +38,7 @@
                         var image = new Image();
                         image.src = e.target.result;
 
+
                         image.onload = function() {
                             var x1 = (this.width - width) / 2;
                             var y1 = (this.height - height) / 2;

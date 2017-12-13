@@ -14,6 +14,8 @@ use Imagine\Image\Box;
 use Aws\S3\S3Client;
 use Yii;
 
+use common\components\FidoComponent;
+
 class UploadAction extends Action
 {
     public $path;
@@ -79,6 +81,11 @@ class UploadAction extends Action
             	$model->{$this->uploadParam}->name = uniqid() . '.' . $model->{$this->uploadParam}->extension;
                 $request = Yii::$app->request;
 
+				// get image orientation
+				if ($exif = @exif_read_data($file->tempName)) {
+					$imageOrientation = $exif['Orientation'];
+				}
+
                 $width = intval($request->post('w'));
                 $height = intval($request->post('h'));
 
@@ -99,7 +106,6 @@ class UploadAction extends Action
 					new Box($width, $height)
 				);
 
-                
                 if (!file_exists($this->path) || !is_dir($this->path)) {
                     $result = [
                         'error' => Yii::t('cropper', 'ERROR_NO_SAVE_DIR')]
@@ -107,28 +113,36 @@ class UploadAction extends Action
                 } else {
                     if ($image->save($this->path . $model->{$this->uploadParam}->name, ['jpeg_quality' => 100, 'png_compression_level' => 1])) {
 
-                        try {
-                            $result = $this->s3client->putObject(array(
-                                'Bucket'     => Yii::$app->params['s3bucket'],
-                                'Key'        => 'crop/'.$model->{$this->uploadParam}->name,
-                                'SourceFile' => $this->path . $model->{$this->uploadParam}->name,
-                                'ACL'        => 'public-read'
-                            ));
+						$record = FidoComponent::checkImageOrientation($this->path . $model->{$this->uploadParam}->name, $imageOrientation);
+						if ($record) {
+							$result = [
+								'filelink' => $record->url,
+								'height' => $height,
+								'width' => $width
+							];
+						} else {
+							try {
+								$result = $this->s3client->putObject(array(
+									'Bucket' => Yii::$app->params['s3bucket'],
+									'Key' => 'crop/' . $model->{$this->uploadParam}->name,
+									'SourceFile' => $this->path . $model->{$this->uploadParam}->name,
+									'ACL' => 'public-read'
+								));
 
-                            $result = [
-                                'filelink' => $result['ObjectURL'],
-                                'height' => $height,
-                                'width' => $width
-                            ];
+								$result = [
+									'filelink' => $result['ObjectURL'],
+									'height' => $height,
+									'width' => $width
+								];
 
-                            unlink($this->path . $model->{$this->uploadParam}->name);
+								unlink($this->path . $model->{$this->uploadParam}->name);
 
-                        } catch (\Exception $e) {
-                            Yii::error($e);
-                            $result = [
-                                'error' => Yii::t('cropper', 'ERROR_CAN_NOT_UPLOAD_FILE')]
-                            ;
-                        }
+							} catch (\Exception $e) {
+								Yii::error($e);
+								$result = [
+									'error' => Yii::t('cropper', 'ERROR_CAN_NOT_UPLOAD_FILE')];
+							}
+						}
 
                     } else {
                         $result = [
