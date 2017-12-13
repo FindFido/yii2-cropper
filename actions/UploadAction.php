@@ -82,11 +82,10 @@ class UploadAction extends Action
                 $request = Yii::$app->request;
 
 				// get image orientation
+				$imageOrientation = null;
 				if ($exif = @exif_read_data($file->tempName)) {
 					if (isset($exif['Orientation'])) {
 						$imageOrientation = $exif['Orientation'];
-					} else {
-						$imageOrientation = null;
 					}
 				}
 
