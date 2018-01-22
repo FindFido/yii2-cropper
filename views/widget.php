@@ -29,8 +29,9 @@ use yii\helpers\Html;
     <center>
     <div class="cropper-buttons">
         <a class='flyerImageMissing add-photo text-center text-reverse btn-center big-font-btn btn btn-info btn-orange col-md-4 col-md-push-4 col-xs-12'><i class="glyphicon glyphicon-camera"></i> Add Photo *</a>
+        <? /* ?>
         <a class='flyerImageMissing crop-photo hidden text-center text-reverse btn-center big-font-btn btn btn-info btn-info col-md-4 col-md-push-4 col-xs-12'><i class="glyphicon glyphicon-camera"></i> Crop Photo *</a>
-        <!--<button type="button" class="btn btn-sm btn-danger delete-photo" aria-label="<?= Yii::t('cropper', 'DELETE_PHOTO');?>">
+        <button type="button" class="btn btn-sm btn-danger delete-photo" aria-label="<?= Yii::t('cropper', 'DELETE_PHOTO');?>">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <?= Yii::t('cropper', 'DELETE_PHOTO');?>
         </button>
         <button type="button" class="btn btn-sm btn-success crop-photo hidden" aria-label="<?= Yii::t('cropper', 'CROP_PHOTO');?>">
@@ -38,7 +39,8 @@ use yii\helpers\Html;
         </button>
         <button type="button" class="btn btn-sm btn-info upload-new-photo hidden" aria-label="<?= Yii::t('cropper', 'UPLOAD_ANOTHER_PHOTO');?>">
             <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> <?= Yii::t('cropper', 'UPLOAD_ANOTHER_PHOTO');?>
-        </button>-->
+        </button>
+        <? */ ?>
     </div>
     </center>
 </div>

@@ -48,12 +48,15 @@
                             
                             cropper.$img.Jcrop({
                                 aspectRatio: aspectRatio,
-                                setSelect: [x1, y1, x2, y2],
+                                setSelect: [0, 0, 0, 0],
                                 boxWidth: cropper.$new_photo_area.width(),
                                 boxHeight: cropper.$new_photo_area.height(),
+                                bgOpacity:1,
                                 bgColor:'',
                                 keySupport: false
                             });
+
+                            cropper.$img.data('Jcrop').disable();
                         };
 
                         cropper.setProgress(0);
@@ -97,7 +100,7 @@
                             cropper.showError('');
                             $('.jcrop-holder > div').addClass('hidden');
                             $('.new-photo-area img').attr({'class':'cropped-image','src': response['filelink']});
-                            $('.new-photo-area img').css({height:'100%',opacity:1,'object-fit':'contain'});
+                            $('.new-photo-area img').css({height:'100%','object-fit':'contain'});
                             cropper.$photo_field.val(response['filelink']);
                             if ((typeof options.onCompleteJcrop !== "undefined") && (typeof options.onCompleteJcrop === "string")) {
                                 eval('var onCompleteJcrop = ' + options.onCompleteJcrop);
