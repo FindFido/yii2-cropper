@@ -18,6 +18,8 @@
                 $width_input: $widget.find('.width-input'),
                 $height_input: $widget.find('.height-input'),
                 $upload_image: $widget.find('#cropperform-upload_image'),
+                $noPhotoIndicator: document.getElementById('cropperform-no_photo_image'),
+                $noPhotoText: document.getElementById('noPhotoText'),
                 uploader: null,
                 reader: null,
                 selectedFile: null,
@@ -28,6 +30,7 @@
                         
                         /* added code */
                         cropper.$cropper_add.addClass('hidden');
+                        cropper.$noPhotoText.classList.add('hidden');
                         cropper.$cropper_crop.removeClass('hidden');
                         /* end added code */
 
@@ -89,6 +92,8 @@
                             cropper.showError('');
                             cropper.reader.readAsDataURL(this._queue[0].file);
                             cropper.$cropper_delete.removeClass('hidden');
+                            cropper.$noPhotoIndicator.value = 0;
+
                             return false;
                         },
                         onComplete: function (filename, response) {
@@ -158,6 +163,7 @@
                     if (value) {
                         cropper.$cropper_buttons.find('button').removeClass('hidden');
                         cropper.$cropper_add.addClass('hidden');
+                        cropper.$noPhotoText.classList.add('hidden');
                         cropper.$cropper_label.addClass('hidden');
                         cropper.$progress.removeClass('hidden');
                         cropper.$progress_bar.css({'width': value + '%'});
@@ -169,6 +175,7 @@
                 clearOldImg: function () {
                     if (cropper.$img) {
                         cropper.$cropper_add.removeClass('hidden');
+                        cropper.$noPhotoText.classList.remove('hidden');
                         cropper.$cropper_crop.addClass('hidden');
                         cropper.$cropper_delete.addClass('hidden');
                         cropper.$cropper_label.removeClass('hidden');
@@ -177,6 +184,7 @@
                         cropper.$img.remove();
                         cropper.$img = null;
                         cropper.$upload_image.val('');
+                        cropper.$noPhotoIndicator.value = 0;
                     }
                 }
             };
